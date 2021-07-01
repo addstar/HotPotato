@@ -1,9 +1,13 @@
-# Fabric Example Mod
+# HotPotato (Fabric mod)
 
-## Setup
+## Introduction
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+_This is a very simple mod made for [Fabric](https://fabricmc.net/)._
+
+The goal of this plugin is to emulate the "Hot Potato" game.
+
+There is no creating recipe for the item, it must be given using the `/give` command or obtained in Creative Mode. The player starting with the **Hot Potato** item has the task of secretly trying to pass it to another player. When the potato is passed, an announcement is broadcast, letting everyone know who passed it to who. Then the cycle continues.
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+Creative Commons - See [LICENSE](LICENSE) file for full details.
