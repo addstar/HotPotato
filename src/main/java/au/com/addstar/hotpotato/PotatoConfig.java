@@ -1,4 +1,4 @@
-package au.com.addstar;
+package au.com.addstar.hotpotato;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;

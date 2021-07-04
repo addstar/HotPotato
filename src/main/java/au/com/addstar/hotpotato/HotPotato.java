@@ -1,4 +1,4 @@
-package au.com.addstar;
+package au.com.addstar.hotpotato;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
@@ -9,13 +9,14 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,28 +55,33 @@ public class HotPotato implements ModInitializer {
 		return null;
 	}
 
-	public static void broadcastMsg(MinecraftServer server, Text msgtext, int delay) {
-		//System.out.println("Scheduling broadcast...");
+	public static void broadcastMsg(MinecraftServer server, Text msgtext, int delay, UUID sender) {
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 		Runnable task = new Runnable() {
-			final MinecraftServer s = server;
-			final Text m = msgtext;
-			final int d = delay;
 			@Override
 			public void run() {
-				HotPotato.broadcastMsg(s, m);
+				try {
+					HotPotato.broadcastMsg(server, msgtext, sender);
+				} catch (Exception e) {
+					System.out.println("Error sending broadcast");
+					e.printStackTrace();
+				}
 			}
 		};
 		scheduler.schedule(task, delay, TimeUnit.SECONDS);
 		scheduler.shutdown();
 	}
 
-	public static void broadcastMsg(MinecraftServer server, Text msgtext) {
+	public static void broadcastMsg(MinecraftServer server, Text msgtext, UUID sender) {
 		// broadcast a message in chat to all players
 		// also log the message to console
 		if (server != null && server.getPlayerManager() != null) {
-			//System.out.println("[Broadcast] " + msgtext.asString());
-			server.getPlayerManager().broadcastChatMessage(msgtext, MessageType.SYSTEM, null);
+			try {
+				server.getPlayerManager().broadcastChatMessage(msgtext, MessageType.SYSTEM, sender);
+			} catch (Exception e) {
+				System.out.println("Error calling broadcastChatMessage");
+				e.printStackTrace();
+			}
 		}
 	}
 }

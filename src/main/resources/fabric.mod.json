@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "au.com.addstar.HotPotato"
+      "au.com.addstar.hotpotato.HotPotato"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "hotpotato.mixins.json"
   ],
 
   "depends": {

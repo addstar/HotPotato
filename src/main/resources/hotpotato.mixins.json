@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "au.com.addstar.mixin",
+  "package": "au.com.addstar.hotpotato.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "PlayerInventoryMixin"

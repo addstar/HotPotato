@@ -1,4 +1,4 @@
-package au.com.addstar;
+package au.com.addstar.hotpotato;
 
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.damage.DamageSource;

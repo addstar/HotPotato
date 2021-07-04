@@ -1,6 +1,6 @@
-package au.com.addstar.mixin;
+package au.com.addstar.hotpotato.mixin;
 
-import au.com.addstar.HotPotato;
+import au.com.addstar.hotpotato.HotPotato;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Mixin(PlayerInventory.class)
 public class PlayerInventoryMixin {
@@ -31,11 +30,7 @@ public class PlayerInventoryMixin {
 
             // Check if the hot potato is being added to an inventory
             if (stack.isItemEqualIgnoreDamage(HotPotato.HOTPOTATO_ITEM.getDefaultStack())) {
-                // Fake player names
-                //int min = LocalDateTime.now().getMinute();
                 String pname = playerEntity.getName().asString();
-                //String msg = "YOU HAVE HOT POTATO! (slot " + slot + ")";
-                //System.out.println("[HotPotato] YOU HAVE HOT POTATO! (slot " + slot + ")");
 
                 // Log all the NBT data on the stack for debugging
                 //dumpNBT(stack);
@@ -44,17 +39,14 @@ public class PlayerInventoryMixin {
                 String prevOwner = null;
                 CompoundTag ptag = stack.getOrCreateSubTag("PotatoTag");
                 try {
-                    //System.out.println("[HotPotato] Checking tags");
                     if (ptag != null && !ptag.isEmpty() && ptag.contains("Owner")) {
                         // existing owner
-                        //System.out.println("[HotPotato] Existing owner");
                         curOwner = ptag.getString("Owner");
                         if (ptag.contains("PrevOwner")) {
                             prevOwner = ptag.getString("PrevOwner");
                         }
                     } else {
                         // no owner
-                        //System.out.println("[HotPotato] First owner");
                         ptag.putString("Owner", pname);
                         ptag.putString("Since", Instant.now().toString());
                         updateItemMeta(stack);
@@ -65,7 +57,6 @@ public class PlayerInventoryMixin {
                     return;
                 }
 
-                //System.out.println("[HotPotato] Checking owners...");
                 if ((curOwner != null) && (!curOwner.equals(pname))) {
                     ptag.putString("Owner", pname);
                     ptag.putString("PrevOwner", curOwner);
@@ -77,7 +68,8 @@ public class PlayerInventoryMixin {
                             HotPotato.broadcastMsg(
                                     playerEntity.getServer(),
                                     msgtext,
-                                    HotPotato.config.broadcast_delay);
+                                    HotPotato.config.broadcast_delay,
+                                    playerEntity.getUuid());
                         }
                     }
                 }
@@ -105,7 +97,6 @@ public class PlayerInventoryMixin {
         if (ptag != null && !ptag.isEmpty()) {
             if (ptag.contains("Owner")) {
                 CompoundTag dtag = stack.getOrCreateSubTag("display");
-                //Text name = new LiteralText("HOT POTATO!!!").formatted(Formatting.RED, Formatting.BOLD);
                 dtag.put("Display", HotPotato.makeText("HOT POTATO!!!", Formatting.RED, Formatting.BOLD));
 
                 String owner = ptag.getString("Owner");
