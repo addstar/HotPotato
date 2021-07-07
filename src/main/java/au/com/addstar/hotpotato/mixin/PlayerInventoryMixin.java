@@ -23,7 +23,7 @@ public class PlayerInventoryMixin {
             value = "INVOKE",
             shift = At.Shift.AFTER
     ), method = "insertStack(ILnet/minecraft/item/ItemStack;)Z")
-    private void invAddStack(int slot, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+    private void invInsertStack(int slot, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack != null && !stack.isEmpty()) {
             PlayerInventory inv = (PlayerInventory) (Object) this;
             PlayerEntity playerEntity = inv.player;
@@ -49,6 +49,7 @@ public class PlayerInventoryMixin {
                         // no owner
                         ptag.putString("Owner", pname);
                         ptag.putString("Since", Instant.now().toString());
+                        ptag.putInt("Count", 0);
                         updateItemMeta(stack);
                     }
                 } catch (Exception e) {
@@ -61,9 +62,10 @@ public class PlayerInventoryMixin {
                     ptag.putString("Owner", pname);
                     ptag.putString("PrevOwner", curOwner);
                     ptag.putString("Since", Instant.now().toString());
+                    ptag.putInt("Count", ptag.getInt("Count")+1);
                     updateItemMeta(stack);
                     if (HotPotato.config.broadcast_exchange) {
-                        final Text msgtext = HotPotato.makeExchangeMsg(pname, curOwner);
+                        final Text msgtext = HotPotato.makeExchangeMsg(pname, curOwner, ptag.getInt("Count"));
                         if (msgtext != null) {
                             HotPotato.broadcastMsg(
                                     playerEntity.getServer(),
@@ -108,7 +110,10 @@ public class PlayerInventoryMixin {
                 lore.add(HotPotato.makeText("you can (no give backs).", Formatting.GREEN));
                 lore.add(HotPotato.makeText(" \u2023 Owner: " + owner, Formatting.YELLOW));
                 if (ptag.contains("PrevOwner")) {
-                    lore.add(HotPotato.makeText(" \u2022 Given by: " + ptag.getString("PrevOwner"), Formatting.DARK_GRAY));
+                    lore.add(HotPotato.makeText(" \u2022 Given by: " + ptag.getString("PrevOwner"), Formatting.DARK_RED));
+                }
+                if (ptag.contains("Count")) {
+                    lore.add(HotPotato.makeText(" \u2022 Passed: " + ptag.getInt("Count") + " times", Formatting.AQUA));
                 }
 
                 dtag.put("Lore", lore);

@@ -1,6 +1,5 @@
 package au.com.addstar.hotpotato;
 
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

@@ -9,7 +9,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -41,11 +40,12 @@ public class HotPotato implements ModInitializer {
 		return tag;
 	}
 
-	public static Text makeExchangeMsg(String owner, String last) {
+	public static Text makeExchangeMsg(String owner, String last, int count) {
 		try {
 			String msg = config.exchange_msg
 					.replace("{to}", owner)
-					.replace("{from}", last);
+					.replace("{from}", last)
+					.replace("{count}", String.valueOf(count));
 			Text msgtext = Text.Serializer.fromJson(msg);
 			return msgtext;
 		} catch (Exception e) {
